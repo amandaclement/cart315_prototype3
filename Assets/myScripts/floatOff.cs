@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 public class floatOff : MonoBehaviour
 {
@@ -11,32 +11,44 @@ public class floatOff : MonoBehaviour
     public Transform target;
     private float speed = 8f;
 
-    public GameObject player;
-    public Light playerHalo;
+    private float alphaAmt = 0f;
 
+    public Image image;
 
     // when in range, player floats to moon
     void floatToMoon()
     {
         float dist = Vector3.Distance(moon.transform.position, this.transform.position);
 
-        Debug.Log(dist);
-
         if (dist < minDistance)
         {
-            playerHalo.enabled = true; // make player glow
             Destroy(GetComponent<Player>()); // destroy player script to disable controls (caused shaking issue)
 
             float step = speed * Time.deltaTime; // calculate distance to move
             transform.position = Vector3.MoveTowards(transform.position, target.position, step);
+            Invoke("fadeOut", 4f);
         }
+    }
+
+    void fadeOut()
+    {
+        if (alphaAmt < 1f)
+        {
+            alphaAmt += 1f * Time.deltaTime; ;
+        }
+        var tempColor = image.color;
+        tempColor.a = alphaAmt;
+        image.color = tempColor;
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
         target = moon.transform;
-        playerHalo.enabled = false;
+        var tempColor = image.color;
+        tempColor.a = alphaAmt;
+        image.color = tempColor;
     }
 
     // Update is called once per frame

@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 // reference for camera rotation effect: https://www.youtube.com/watch?v=iuygipAigew
 
@@ -24,6 +24,8 @@ public class cameraRotator : MonoBehaviour
 
     public float speed;
 
+    public Text controls;
+    private float alphaAmt = 0f;
 
     void cameraEffect()
     {
@@ -49,13 +51,13 @@ public class cameraRotator : MonoBehaviour
             Invoke("cameraSwitch", 1f);
         }
         transform.Translate(0, 0, -translation);
-
     }
 
     void cameraSwitch()
     {
         rotationCamera.transform.parent = player.transform; // camera now child of player
         Invoke("cameraControls", 0); // player can now control camera angle
+        Invoke("fadeInText", 0); // control instructions appear
     }
 
     // arrow keys to control camera angle
@@ -79,10 +81,29 @@ public class cameraRotator : MonoBehaviour
         }
     }
 
+    // function to control fading in/out control instructions
+    void fadeInText()
+    {
+        if (alphaAmt < 1f)
+        {
+            alphaAmt += 0.8f * Time.deltaTime; ;
+        }
+
+        if (Input.GetKey(KeyCode.E)) // E to close control instructions
+        {
+            Destroy(controls);
+        }
+        var tempColor = controls.color;
+        tempColor.a = alphaAmt;
+        controls.color = tempColor;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-
+        var tempColor = controls.color;
+        tempColor.a = alphaAmt;
+        controls.color = tempColor;
     }
 
     // Update is called once per frame
