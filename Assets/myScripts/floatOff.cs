@@ -4,24 +4,27 @@ using UnityEngine;
 
 public class floatOff : MonoBehaviour
 {
-    private float movementSpeed = 0.5f;
-
 
     public GameObject moon;
-    private float minDistance;
+    public float minDistance;
 
     public Transform target;
     private float speed = 8f;
+
+    public GameObject player;
+    public Light playerHalo;
 
 
     // when in range, player floats to moon
     void floatToMoon()
     {
         float dist = Vector3.Distance(moon.transform.position, this.transform.position);
-        minDistance = 120;
+
+        Debug.Log(dist);
 
         if (dist < minDistance)
         {
+            playerHalo.enabled = true; // make player glow
             Destroy(GetComponent<Player>()); // destroy player script to disable controls (caused shaking issue)
 
             float step = speed * Time.deltaTime; // calculate distance to move
@@ -33,6 +36,7 @@ public class floatOff : MonoBehaviour
     void Start()
     {
         target = moon.transform;
+        playerHalo.enabled = false;
     }
 
     // Update is called once per frame

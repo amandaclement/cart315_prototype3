@@ -21,7 +21,6 @@ public class cameraRotator : MonoBehaviour
     public GameObject player;
     public float trackingSpeed;
     public Camera rotationCamera;
-    public Camera trackCamera;
 
     public float speed;
 

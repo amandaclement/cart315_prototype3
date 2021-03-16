@@ -9,7 +9,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] // used so that variable cannot be changed by other scripts
-    private float moveSpeed = 7f;
+    private float moveSpeed = 10f;
     [SerializeField]
     private float gravity = 9.81f;
     [SerializeField]
@@ -33,6 +33,13 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 direction = new Vector3(horizontalInput, 0, verticalInput);
+
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) { // speed when shift key pressed
+            moveSpeed = 20f;
+        } else
+        {
+            moveSpeed = 8f;
+        }
 
         directionY -= gravity * Time.deltaTime;
         direction.y = directionY;
