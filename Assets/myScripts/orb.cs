@@ -13,11 +13,8 @@ public class orb : MonoBehaviour
     {
         float dist = Vector3.Distance(player.transform.position, this.transform.position);
 
-        Debug.Log("current " + dist);
-
         if (dist<minDistance)
         {
-            Debug.Log("destroy iy");
             Destroy(gameObject); // destroy the orb
             playerHalo.intensity = currentIntensity + 0.06f; // increase player's brightness
         }

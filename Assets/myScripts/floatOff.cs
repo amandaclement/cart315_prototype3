@@ -26,7 +26,7 @@ public class floatOff : MonoBehaviour
 
             float step = speed * Time.deltaTime; // calculate distance to move
             transform.position = Vector3.MoveTowards(transform.position, target.position, step);
-            Invoke("fadeOut", 4f);
+            Invoke("fadeOut", 5f);
         }
     }
 
