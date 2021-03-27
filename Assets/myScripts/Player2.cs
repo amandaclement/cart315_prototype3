@@ -6,7 +6,7 @@ using UnityEngine;
 
 // reference (character controller tutorial): https://www.youtube.com/watch?v=59No0ybIoxg
 
-public class Player : MonoBehaviour
+public class Player2 : MonoBehaviour
 {
     [SerializeField] // used so that variable cannot be changed by other scripts
     private float moveSpeed = 10f;
