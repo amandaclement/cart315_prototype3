@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class Player : MonoBehaviour {
+	// accessing bool from cameraRotator script
+	public cameraRotator bS;
+	public bool enteredShip;
 
 		private Animator anim;
 		private CharacterController controller;
@@ -16,6 +19,8 @@ public class Player : MonoBehaviour {
 
 	    public float RotateSpeed = 3.0f;
 
+	    
+
 	void Start () {
 	    controller = GetComponent <CharacterController>();
 	    anim = gameObject.GetComponentInChildren<Animator>(); // for the character animations
@@ -23,8 +28,19 @@ public class Player : MonoBehaviour {
 
 	private void FixedUpdate()
 	{
-		// for smooth character rotation when player changes directions
-		float moveHorizontal = Input.GetAxisRaw("Horizontal");
+        //if (enteredShip)
+        //      {
+        //	Destroy(GetComponent<Player>());
+        //	Debug.Log("SUCCESS");
+        //}
+
+        if (bS.enteredShip == true)
+        {
+            Destroy(GetComponent<Player>()); // disable player movement
+        }
+
+        // for smooth character rotation when player changes directions
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
         float moveVertical = Input.GetAxisRaw("Vertical");
 
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);

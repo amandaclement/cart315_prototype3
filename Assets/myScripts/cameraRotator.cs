@@ -6,30 +6,50 @@ using System.Collections;
 
 public class cameraRotator : MonoBehaviour
 {
-    public float transitionSpeed;
-    // public float rotationSpeed;
-    // float rotationFull = 355; // offset
+    //public float rotationSpeed;
+    //float rotationFull = 415; // offset
 
+    // FOR INTRO CAMERA PANNING
+    public float transitionSpeed;
     public float translationSpeed;
     float translationFull = 750;
-
-    // camera zoom in effect coordinates
+    // main cam target coordinates
     public float x;
     public float y;
     public float z;
+    bool enableCameraControls = false;
 
+    public GameObject spaceshipIntro;
+
+    // FOR SPACESHIP CAMERA PANNING
+    // secondary cam target coordinates
+    public float camSX;
+    public float camSY;
+    public float camSZ;
+    // transition speed
+    public float camSSpeed;
+
+    // FOR GENERAL PLAYER MOVEMENT
     public GameObject player;
     public float trackingSpeed;
-
     public float speed;
 
+    // FOR INSTRUCTIONS/CONTROLS
+    public Text instructions;
     public Text controls;
-    public Text controls2;
     private float alphaAmt = 0f;
+    private float alphaAmt1 = 0f;
+    bool fadeInControls = false;
 
+    // FOR FADE TO BLACK (BETWEEN SCENES/CAMERA SWITCH)
+    public Image blackout;
+    private float alphaAmt2 = 0f;
+
+    // FOR CAMERA CONTROLS / MOVEMENT
     public Transform lookAt;
     public Transform camTransform;
     public Camera mainCam;
+    public Camera secondaryCam;
     public float distance = 5.0f;
 
     public float currentX = 0.0f;
@@ -39,10 +59,10 @@ public class cameraRotator : MonoBehaviour
     private const float Y_ANGLE_MIN = 25.0f;
     private const float Y_ANGLE_MAX = 50.0f;
 
-
     public float speedH = 2.0f;
     public float speedV = 2.0f;
 
+    // FOR INVENTORY
     public GameObject spaceship;
     public GameObject body;
     public GameObject wingR;
@@ -65,22 +85,49 @@ public class cameraRotator : MonoBehaviour
     public Light engineLightTop;
     public Light engineLightBottom;
 
+    // FOR COLLECTABLES
     public GameObject collectableBody;
     bool collectedBody = false;
+    public GameObject collectableWingR;
+    bool collectedWingR = false;
+    public GameObject collectableWingL;
+    bool collectedWingL = false;
+    public GameObject collectableBoosterR;
+    bool collectedBoosterR = false;
+    public GameObject collectableBoosterL;
+    bool collectedBoosterL = false;
+    public GameObject collectableEngine;
+    bool collectedEngine = false;
+    // min necessary range between player and spaceship part in order for them to collect it
     private float minDistance = 6;
 
-    bool enableCameraControls = false;
+    public GameObject spaceshipReady;
+    public float offsetX = 0.0f;
+    public float offsetY = 0.0f;
+    public float offsetZ = 0.0f;
+    public GameObject moon;
+
+    bool fadeInBlackout = true;
+    bool SStransition = false;
+    bool spinShip = false;
+
+    public bool enteredShip = false;
+
+    bool toMoon = false;
+
+    public float floatSpeed = 0.0f;
+    public Image whiteout; // end screen
+    private float alphaAmt3 = 0f; // end screen alpha
 
     void cameraEffect()
     {
         // float rotation = rotationSpeed * Time.deltaTime;
-
-        float translation = translationSpeed * Time.deltaTime;
-
         //if (rotationFull > rotation)
         //{
         //    rotationFull -= rotation;
         //}
+
+        float translation = translationSpeed * Time.deltaTime;
 
         if (translationFull > translation)
         {
@@ -93,36 +140,160 @@ public class cameraRotator : MonoBehaviour
             translationFull = 0;
             transform.position = Vector3.Lerp(transform.position, new Vector3(x, y, z), Time.deltaTime * transitionSpeed);
 
-            Invoke("cameraSwitch", 1f);
+            Invoke("fadeInText", 1f);
         }
         transform.Translate(0, 0, -translation);
     }
 
-    void cameraSwitch()
+    // CAMERA EFFECT FOR SHOWING THE SPACESHIP ONCE ALL PARTS HAVE BEEN COLLECTED
+    void showSpaceship()
     {
-        Invoke("fadeInText", 0); // control instructions appear
-        Invoke("cameraControls", 0); 
 
-        enableCameraControls = true;
+        // locking cursor
+        //Cursor.lockState = CursorLockMode.None;
+        //Cursor.lockState = CursorLockMode.Confined;
+        //Cursor.visible = true;
+
+        //Vector3 dir = new Vector3(0, 0, -20 - distance);
+        //Quaternion rotation = Quaternion.Euler(-20 + currentY, currentX, currentZ);
+
+        //camTransform.position = lookAt.position + rotation * dir;
+        //camTransform.LookAt(lookAt.position);
+
+
+        // enableCameraControls = false;
+
+        // secondaryCam.enabled = true; // enable secondary camera
+
+        // match mainCam position and rotation values for secondaryCam
+        //secondaryCam.transform.position = mainCam.transform.position;
+        //var mainCamX = mainCam.transform.localEulerAngles.x;
+        //var mainCamY = mainCam.transform.localEulerAngles.y;
+        //var mainCamZ = mainCam.transform.localEulerAngles.z;
+        //secondaryCam.transform.localRotation = Quaternion.Euler(mainCamX, mainCamY, mainCamZ);
+
+        // secondaryCam.transform.position = Vector3.Lerp(secondaryCam.transform.position, new Vector3(camSX, camSY, camSZ), Time.deltaTime * camSSpeed);
+        //secondaryCam.transform.rotation = Quaternion.RotateTowards(secondaryCam.transform.rotation, Quaternion.Euler(0, 30, 0), 3 * Time.deltaTime);
+
+
+        // make secondary translate (zoom in) to spaceship
+        //secondaryCam.transform.position = Vector3.Lerp(secondaryCam.transform.position, new Vector3(camSX, camSY, camSZ), Time.deltaTime * camSSpeed);
+        // secondaryCam.transform.rotation = Quaternion.RotateTowards(secondaryCam.transform.rotation, Quaternion.Euler(0,30,0), 3 * Time.deltaTime);
+
+        //transform.position = Vector3.Lerp(transform.position, new Vector3(spaceshipReady.transform.position.x, spaceshipReady.transform.position.y, spaceshipReady.transform.position.z), Time.deltaTime * 0.1f);
+        //Camera.main.transform.position = new Vector3(spaceshipReady.transform.position.x + offsetX, spaceshipReady.transform.position.y + offsetY, spaceshipReady.transform.position.z + offsetZ);
     }
 
-    // function to control fading in/out control instructions
+    //void cameraSwitch()
+    //{
+    //    Invoke("fadeInText", 0); // control instructions appear
+    //    // Invoke("cameraControls", 0); 
+
+    //    // enableCameraControls = true;
+    //}
+
+    // HANDLING FADING IN/OUT CONTROL INSTRUCTIONS
     void fadeInText()
     {
-        alphaAmt += 0.8f * Time.deltaTime; 
+        enableCameraControls = true; // enable camera controls
+        alphaAmt1 += 0.2f * Time.deltaTime; // fade in instructions
 
         if (Input.GetKey(KeyCode.E)) {
-            Destroy(controls);
+            
+            instructions.enabled = false; // hide instructions
+            fadeInControls = true;
+        }
+
+        if (fadeInControls)
+        {
+            alphaAmt += 0.2f * Time.deltaTime; // fade in controls
+            Invoke("hideControls", 0.5f);
         }
 
         var tempColor = controls.color;
         tempColor.a = alphaAmt;
         controls.color = tempColor;
+
+        var tempColor1 = instructions.color;
+        tempColor1.a = alphaAmt1;
+        instructions.color = tempColor1;
     }
 
+    void hideControls()
+    {
+        if (Input.GetKey(KeyCode.E))
+        {
+            controls.enabled = false; // hide controls
+        }
+    }
+
+    // HANDLING FADING IN/OUT BETWEEN SCENES (once all spaceship parts have been collected)
+    void fadeBlack()
+    {
+        if (fadeInBlackout)
+        {
+            alphaAmt2 += 0.9f * Time.deltaTime;
+            Invoke("fadeBackIn", 1.6f);
+        }
+
+        var tempColor2 = blackout.color;
+        tempColor2.a = alphaAmt2;
+        blackout.color = tempColor2;
+    }
+
+    void fadeBackIn()
+    {
+        fadeInBlackout = false; // preventing it blackout from fading back in
+        alphaAmt2 -= 0.9f * Time.deltaTime;
+
+        SStransition = true; // set bool to true to trigger showSpaceship function
+
+        var tempColor2 = blackout.color;
+        tempColor2.a = alphaAmt2;
+        blackout.color = tempColor2;
+
+        spaceshipReady.SetActive(true); // reveal finalized spaceship
+        spaceship.SetActive(false); // hide spaceship inventory
+
+        secondaryCam.transform.LookAt(player.transform);
+
+        secondaryCam.enabled = true; // switch to secondary camera view
+
+        // place spaceship right near player (** NEED MODIFICATION/POLISHING **)
+        spaceshipReady.transform.position = new Vector3(player.transform.position.x + offsetX, player.transform.position.y + offsetY, player.transform.position.z + offsetZ);
+
+        // controlling the actual flying
+        float distShip = Vector3.Distance(player.transform.position, spaceshipReady.transform.position);
+        if (distShip < 13)
+        {
+            enteredShip = true;
+            // position player in spaceship
+            spaceshipReady.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z);
+            player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z);
+            Invoke("prepForFlight",1.5f);
+        }
+    }
+
+    void prepForFlight()
+    {
+        toMoon = true;
+    }
+
+    void fadeWhite()
+    {
+        if (alphaAmt3 < 1f)
+        {
+            alphaAmt3 += 1f * Time.deltaTime; ;
+        }
+        var tempColor3 = whiteout.color;
+        tempColor3.a = alphaAmt3;
+        whiteout.color = tempColor3;
+    }
+
+    // HANDLING COLLECTABLES INVENTORY
     void inventory()
     {
-        // positioning parts based on viewport
+        // positioning inventory based on viewport
         spaceship.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - 90, Screen.height - 30, Camera.main.nearClipPlane + 1));
 
         // constant rotation
@@ -147,42 +318,167 @@ public class cameraRotator : MonoBehaviour
         engineLightTop.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - 90, Screen.height + 30, Camera.main.nearClipPlane + 1));
         engineLightBottom.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - 90, Screen.height - 90, Camera.main.nearClipPlane + 1));
 
-        // for now, keep light intensities at 0 since the player has not collected anything
-        //bodyLightTop.intensity = 0;
-        //bodyLightBottom.intensity = 0;
-        wingLLightTop.intensity = 0;
-        wingLLightBottom.intensity = 0;
-        wingRLightTop.intensity = 0;
-        wingRLightBottom.intensity = 0;
-        boosterLLightTop.intensity = 0;
-        boosterLLightBottom.intensity = 0;
-        boosterRLightTop.intensity = 0;
-        boosterRLightBottom.intensity = 0;
-        engineLightTop.intensity = 0;
-        engineLightBottom.intensity = 0;
-
-        // distance between player and collectable
-        float dist = Vector3.Distance(player.transform.position, collectableBody.transform.position);
-        if (dist < minDistance)
+        // HANDLING THE FINDING OF COLLECTABLES
+        // BODY
+        float distBody = Vector3.Distance(player.transform.position, collectableBody.transform.position);
+        if (distBody < minDistance)
         {
-            // if within range, player has found the part so we can destroy it and light it up
-           // Destroy(collectableBody);
             collectableBody.SetActive(false); // hide part once found
             collectedBody = true;
         } 
-
         if (collectedBody)
         {
+            // light up that specific part in inventory (fade in)
             if (bodyLightTop.intensity < 1)
             {
                 bodyLightTop.intensity += 0.8f * Time.deltaTime;
             }
-            // bodyLightTop.intensity = 1;
-            bodyLightBottom.intensity = 1;
+            if (bodyLightBottom.intensity < 1)
+            {
+                bodyLightBottom.intensity += 0.8f * Time.deltaTime;
+            }
         } else
         {
+            // until collected, keep light off
             bodyLightTop.intensity = 0;
             bodyLightBottom.intensity = 0;
+        }
+        //
+        // LEFT WING
+        float distWingL = Vector3.Distance(player.transform.position, collectableWingL.transform.position);
+        if (distWingL < minDistance)
+        {
+            collectableWingL.SetActive(false); // hide part once found
+            collectedWingL = true;
+        }
+        if (collectedWingL)
+        {
+            // light up that specific part in inventory (fade in)
+            if (wingLLightTop.intensity < 1)
+            {
+                wingLLightTop.intensity += 0.8f * Time.deltaTime;
+            }
+            if (wingLLightBottom.intensity < 1)
+            {
+                wingLLightBottom.intensity += 0.8f * Time.deltaTime;
+            }
+        }
+        else
+        {
+            // until collected, keep light off
+            wingLLightTop.intensity = 0;
+            wingLLightBottom.intensity = 0;
+        }
+        //
+        // RIGHT WING
+        float distWingR = Vector3.Distance(player.transform.position, collectableWingR.transform.position);
+        if (distWingR < minDistance)
+        {
+            collectableWingR.SetActive(false); // hide part once found
+            collectedWingR = true;
+        }
+        if (collectedWingR)
+        {
+            // light up that specific part in inventory (fade in)
+            if (wingRLightTop.intensity < 1)
+            {
+                wingRLightTop.intensity += 0.8f * Time.deltaTime;
+            }
+            if (wingRLightBottom.intensity < 1)
+            {
+                wingRLightBottom.intensity += 0.8f * Time.deltaTime;
+            }
+        }
+        else
+        {
+            // until collected, keep light off
+            wingRLightTop.intensity = 0;
+            wingRLightBottom.intensity = 0;
+        }
+        //
+        // LEFT BOOSTER
+        float distBoosterL = Vector3.Distance(player.transform.position, collectableBoosterL.transform.position);
+        if (distBoosterL < minDistance)
+        {
+            collectableBoosterL.SetActive(false); // hide part once found
+            collectedBoosterL = true;
+        }
+        if (collectedBoosterL)
+        {
+            // light up that specific part in inventory (fade in)
+            if (boosterLLightTop.intensity < 1)
+            {
+                boosterLLightTop.intensity += 0.8f * Time.deltaTime;
+            }
+            if (boosterLLightBottom.intensity < 1)
+            {
+                boosterLLightBottom.intensity += 0.8f * Time.deltaTime;
+            }
+        }
+        else
+        {
+            // until collected, keep light off
+            boosterLLightTop.intensity = 0;
+            boosterLLightBottom.intensity = 0;
+        }
+        //
+        // RIGHT BOOSTER
+        float distBoosterR = Vector3.Distance(player.transform.position, collectableBoosterR.transform.position);
+        if (distBoosterR < minDistance)
+        {
+            collectableBoosterR.SetActive(false); // hide part once found
+            collectedBoosterR = true;
+        }
+        if (collectedBoosterR)
+        {
+            // light up that specific part in inventory (fade in)
+            if (boosterRLightTop.intensity < 1)
+            {
+                boosterRLightTop.intensity += 0.8f * Time.deltaTime;
+            }
+            if (boosterRLightBottom.intensity < 1)
+            {
+                boosterRLightBottom.intensity += 0.8f * Time.deltaTime;
+            }
+        }
+        else
+        {
+            // until collected, keep light off
+            boosterRLightTop.intensity = 0;
+            boosterRLightBottom.intensity = 0;
+        }
+        //
+        // ENGINE
+        float distEngine = Vector3.Distance(player.transform.position, collectableEngine.transform.position);
+        if (distEngine < minDistance)
+        {
+            collectableEngine.SetActive(false); // hide part once found
+            collectedEngine = true;
+        }
+        if (collectedEngine)
+        {
+            // light up that specific part in inventory (fade in)
+            if (engineLightTop.intensity < 1)
+            {
+                engineLightTop.intensity += 0.8f * Time.deltaTime;
+            }
+            if (engineLightBottom.intensity < 1)
+            {
+                engineLightBottom.intensity += 0.8f * Time.deltaTime;
+            }
+        }
+        else
+        {
+            // until collected, keep light off
+            engineLightTop.intensity = 0;
+            engineLightBottom.intensity = 0;
+        }
+        //
+
+        // CHECKING IF SPACESHIP IS READY (if all parts are collected)
+        if (collectedBody && collectedWingL && collectedWingR && collectedBoosterL && collectedBoosterR && collectedEngine)
+        {
+            Invoke("fadeBlack",0); // fade screen to black before transitioning scenes
         }
     }
 
@@ -193,24 +489,66 @@ public class cameraRotator : MonoBehaviour
         tempColor.a = alphaAmt;
         controls.color = tempColor;
 
+        var tempColor1 = instructions.color;
+        tempColor1.a = alphaAmt1;
+        instructions.color = tempColor1;
+
+        var tempColor2 = blackout.color;
+        tempColor2.a = alphaAmt2;
+        blackout.color = tempColor2;
+
+        var tempColor3 = whiteout.color;
+        tempColor3.a = alphaAmt3;
+        whiteout.color = tempColor3;
+
+
+        spaceshipReady.SetActive(false); // hide spaceship (until all parts are found)
+
         mainCam = Camera.main;
+        mainCam.enabled = true;
+        secondaryCam.enabled = false; // secondary cam is disabled until all spaceship parts are collected
+
+       
     }
 
     // Update is called once per frame
     void Update()
     {
-
         cameraEffect();
 
         currentX += Input.GetAxis("Mouse X");
         currentY -= Input.GetAxis("Mouse Y");
 
         currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+
+        if (SStransition)
+        {
+            showSpaceship();
+        }
+
+        if (toMoon)
+        {
+            // making spaceship and player fly to moon
+            float step = floatSpeed * Time.deltaTime; // calculate distance to move
+            spaceshipReady.transform.position = Vector3.MoveTowards(spaceshipReady.transform.position, moon.transform.position, step);
+            player.transform.position = Vector3.MoveTowards(player.transform.position, moon.transform.position, step);
+
+            // slight rotation during flight
+            player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, Quaternion.Euler(0, 0, 20), 2 * Time.deltaTime);
+            spaceshipReady.transform.rotation = Quaternion.RotateTowards(spaceshipReady.transform.rotation, Quaternion.Euler(0, 0, 20), 2 * Time.deltaTime);
+
+            // tracking distance between spaceship and moon to control when to start fading to white
+            float dist = Vector3.Distance(spaceshipReady.transform.position, moon.transform.position);
+            if (dist < 200) { 
+                fadeWhite();
+            }
+            // Invoke("fadeWhite", 8f); // fade to white screen to indicate end of game
+
+        }
     }
 
     private void LateUpdate()
     {
-
         if (enableCameraControls)
         {
             {
