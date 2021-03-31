@@ -85,19 +85,19 @@ public class cameraRotator : MonoBehaviour
     public Light engineLightTop;
     public Light engineLightBottom;
 
-    // FOR COLLECTABLES
+    // FOR COLLECTABLES // public bools since they are accessed in fadingLights scripts
     public GameObject collectableBody;
-    bool collectedBody = false;
+    public bool collectedBody = false;
     public GameObject collectableWingR;
-    bool collectedWingR = false;
+    public bool collectedWingR = false;
     public GameObject collectableWingL;
-    bool collectedWingL = false;
+    public bool collectedWingL = false;
     public GameObject collectableBoosterR;
-    bool collectedBoosterR = false;
+    public bool collectedBoosterR = false;
     public GameObject collectableBoosterL;
-    bool collectedBoosterL = false;
+    public bool collectedBoosterL = false;
     public GameObject collectableEngine;
-    bool collectedEngine = false;
+    public bool collectedEngine = false;
     // min necessary range between player and spaceship part in order for them to collect it
     private float minDistance = 6;
 
@@ -108,8 +108,6 @@ public class cameraRotator : MonoBehaviour
     public GameObject moon;
 
     bool fadeInBlackout = true;
-    bool SStransition = false;
-    bool spinShip = false;
 
     public bool enteredShip = false;
 
@@ -144,53 +142,6 @@ public class cameraRotator : MonoBehaviour
         }
         transform.Translate(0, 0, -translation);
     }
-
-    // CAMERA EFFECT FOR SHOWING THE SPACESHIP ONCE ALL PARTS HAVE BEEN COLLECTED
-    void showSpaceship()
-    {
-
-        // locking cursor
-        //Cursor.lockState = CursorLockMode.None;
-        //Cursor.lockState = CursorLockMode.Confined;
-        //Cursor.visible = true;
-
-        //Vector3 dir = new Vector3(0, 0, -20 - distance);
-        //Quaternion rotation = Quaternion.Euler(-20 + currentY, currentX, currentZ);
-
-        //camTransform.position = lookAt.position + rotation * dir;
-        //camTransform.LookAt(lookAt.position);
-
-
-        // enableCameraControls = false;
-
-        // secondaryCam.enabled = true; // enable secondary camera
-
-        // match mainCam position and rotation values for secondaryCam
-        //secondaryCam.transform.position = mainCam.transform.position;
-        //var mainCamX = mainCam.transform.localEulerAngles.x;
-        //var mainCamY = mainCam.transform.localEulerAngles.y;
-        //var mainCamZ = mainCam.transform.localEulerAngles.z;
-        //secondaryCam.transform.localRotation = Quaternion.Euler(mainCamX, mainCamY, mainCamZ);
-
-        // secondaryCam.transform.position = Vector3.Lerp(secondaryCam.transform.position, new Vector3(camSX, camSY, camSZ), Time.deltaTime * camSSpeed);
-        //secondaryCam.transform.rotation = Quaternion.RotateTowards(secondaryCam.transform.rotation, Quaternion.Euler(0, 30, 0), 3 * Time.deltaTime);
-
-
-        // make secondary translate (zoom in) to spaceship
-        //secondaryCam.transform.position = Vector3.Lerp(secondaryCam.transform.position, new Vector3(camSX, camSY, camSZ), Time.deltaTime * camSSpeed);
-        // secondaryCam.transform.rotation = Quaternion.RotateTowards(secondaryCam.transform.rotation, Quaternion.Euler(0,30,0), 3 * Time.deltaTime);
-
-        //transform.position = Vector3.Lerp(transform.position, new Vector3(spaceshipReady.transform.position.x, spaceshipReady.transform.position.y, spaceshipReady.transform.position.z), Time.deltaTime * 0.1f);
-        //Camera.main.transform.position = new Vector3(spaceshipReady.transform.position.x + offsetX, spaceshipReady.transform.position.y + offsetY, spaceshipReady.transform.position.z + offsetZ);
-    }
-
-    //void cameraSwitch()
-    //{
-    //    Invoke("fadeInText", 0); // control instructions appear
-    //    // Invoke("cameraControls", 0); 
-
-    //    // enableCameraControls = true;
-    //}
 
     // HANDLING FADING IN/OUT CONTROL INSTRUCTIONS
     void fadeInText()
@@ -245,8 +196,6 @@ public class cameraRotator : MonoBehaviour
     {
         fadeInBlackout = false; // preventing it blackout from fading back in
         alphaAmt2 -= 0.9f * Time.deltaTime;
-
-        SStransition = true; // set bool to true to trigger showSpaceship function
 
         var tempColor2 = blackout.color;
         tempColor2.a = alphaAmt2;
@@ -485,6 +434,7 @@ public class cameraRotator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         var tempColor = controls.color;
         tempColor.a = alphaAmt;
         controls.color = tempColor;
@@ -501,14 +451,12 @@ public class cameraRotator : MonoBehaviour
         tempColor3.a = alphaAmt3;
         whiteout.color = tempColor3;
 
-
         spaceshipReady.SetActive(false); // hide spaceship (until all parts are found)
 
         mainCam = Camera.main;
         mainCam.enabled = true;
         secondaryCam.enabled = false; // secondary cam is disabled until all spaceship parts are collected
 
-       
     }
 
     // Update is called once per frame
@@ -520,11 +468,6 @@ public class cameraRotator : MonoBehaviour
         currentY -= Input.GetAxis("Mouse Y");
 
         currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
-
-        if (SStransition)
-        {
-            showSpaceship();
-        }
 
         if (toMoon)
         {

@@ -27,13 +27,7 @@ public class Player : MonoBehaviour {
 	}
 
 	private void FixedUpdate()
-	{
-        //if (enteredShip)
-        //      {
-        //	Destroy(GetComponent<Player>());
-        //	Debug.Log("SUCCESS");
-        //}
-
+	{ 
         if (bS.enteredShip == true)
         {
             Destroy(GetComponent<Player>()); // disable player movement
@@ -72,11 +66,11 @@ public class Player : MonoBehaviour {
 		// shift for speed increase
 		if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
 		{ 
-			speed = 25f;
+			speed = 28f;
 		}
 		else
 		{
-			speed = 13f;
+			speed = 16f;
 		}
 
 		directionY -= gravity * Time.deltaTime * 0.5f; // 0.5f to slow down jump speed
