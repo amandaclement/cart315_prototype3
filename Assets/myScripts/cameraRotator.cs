@@ -469,6 +469,21 @@ public class cameraRotator : MonoBehaviour
 
         currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
 
+
+        ////////////
+        //Ray cameraRay = mainCam.ScreenPointToRay(Input.mousePosition);
+        //Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        //float rayLength;
+
+        //if (groundPlane.Raycast(cameraRay, out rayLength))
+        //{
+        //    Vector3 pointToLook = cameraRay.GetPoint(rayLength);
+        //    // Debug.DrawLine(cameraRay.origin, pointToLook, Color.cyan);
+
+        //    player.transform.LookAt(new Vector3(pointToLook.x, transform.position.y, 0));
+        //}
+        ////////////
+
         if (toMoon)
         {
             // making spaceship and player fly to moon

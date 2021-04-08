@@ -19,7 +19,17 @@ public class Player : MonoBehaviour {
 
 	    public float RotateSpeed = 3.0f;
 
-	    
+	public float currentX = 0.0f;
+	public float currentY = 0.0f;
+	public float currentZ = 0.0f;
+
+	private const float Y_ANGLE_MIN = 25.0f;
+	private const float Y_ANGLE_MAX = 50.0f;
+
+	public float turnSmoothTime = 0.1f;
+	float turnSmoothVelocity;
+
+	public Transform mainCam;
 
 	void Start () {
 	    controller = GetComponent <CharacterController>();
@@ -32,15 +42,6 @@ public class Player : MonoBehaviour {
         {
             Destroy(GetComponent<Player>()); // disable player movement
         }
-
-        // for smooth character rotation when player changes directions
-        float moveHorizontal = Input.GetAxisRaw("Horizontal");
-        float moveVertical = Input.GetAxisRaw("Vertical");
-
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-		transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(movement), Time.time * 1);
-		//
-
 		// setting the character animations based on movement
 		if (Input.GetButton("Jump"))
 		{
@@ -73,16 +74,45 @@ public class Player : MonoBehaviour {
 			speed = 16f;
 		}
 
-		directionY -= gravity * Time.deltaTime * 0.5f; // 0.5f to slow down jump speed
+		// tutorial reference for making player movement adjust to camera angle: https://www.youtube.com/watch?v=ORD7gsuLivE
+		// tutorial reference for making player rotate accordingly: https://www.youtube.com/watch?v=4HpC--2iowE
+		Vector3 camF = mainCam.forward;
+		Vector3 camR = mainCam.right;
+
+		camF.y = 0;
+		camR.y = 0;
+		camF = camF.normalized;
+		camR = camR.normalized;
+
+		if (direction.magnitude >= 0.1f)
+        {
+			float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + mainCam.eulerAngles.y;
+			float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+			transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+			controller.Move((camF * verticalInput + camR * horizontalInput) * speed * Time.deltaTime);
+		}
+
+		//directionY -= gravity * Time.deltaTime * 0.5f;
+		//direction.y = directionY;
+
+		directionY -= gravity * Time.deltaTime * 0.5f;
 		direction.y = directionY;
-		controller.Move(direction * speed * Time.deltaTime);
+
+		controller.Move(transform.up * directionY);
+
 		if (controller.isGrounded)
 		{
 			if (Input.GetButton("Jump"))
 			{
 				directionY = jumpSpeed;
+				// var jump = new Vector3(0.0f, 2.0f, 0.0f);
+				//transform(transform.up * Time.deltaTime);
+
+
 			}
 		}
 		//
+
 	}
 }
