@@ -6,27 +6,62 @@ public class WingR : MonoBehaviour
 {
     public GameObject player;
     public GameObject WingHide;
-    public bool collectedWingR = false;
+    private bool collectedComponent = false;
 
     public Light wingRLightTop; // inventory light
     public Light wingRLightBottom; // inventory light
 
-    public Light wingRLight; // glow effect
+    public Light wingRLight; // component glow effect
+    public Light playerLight; // player glow effect
 
     private Animator anim;
     private CharacterController controller;
 
-    private void OnCollisionEnter(Collision collision)
+    public AudioSource SFX;
+
+    void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.gameObject == player)
         {
-            WingHide.SetActive(false); // hide part once found
-            collectedWingR = true;
+            collectedComponent = true;
+            wingRLight.intensity = 0; // once collected, remove light
             anim.SetTrigger("Flip"); // make player flip once
+            Invoke("sound", 0.15f); // slightly delay the sound effect
 
-            wingRLight.GetComponent<Light>().intensity = 0; // once collected, remove light
+            // once collided, destroy the component's rigidbody to disable collider activity
+            Destroy(GetComponent<Rigidbody>());
+            // hide object by disabling render
+            MeshRenderer render = gameObject.GetComponentInChildren<MeshRenderer>();
+            render.enabled = false;
+        }
+    }
 
-            // light up that specific part in inventory (fade in)
+    void sound()
+    {
+        SFX.Play(); // sound effect
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+        anim = player.GetComponentInChildren<Animator>(); // for the character animations
+
+        playerLight.intensity = 0;
+        wingRLightTop.intensity = 0;
+        wingRLightBottom.intensity = 0;
+    }
+
+    void playerLightFade()
+    {
+        playerLight.intensity -= 0.2f * Time.deltaTime;
+    }
+
+    // Update is called once per frame
+    private void FixedUpdate()
+    {
+        if (collectedComponent)
+        {
             if (wingRLightTop.intensity < 1)
             {
                 wingRLightTop.intensity += 0.8f * Time.deltaTime;
@@ -35,22 +70,17 @@ public class WingR : MonoBehaviour
             {
                 wingRLightBottom.intensity += 0.8f * Time.deltaTime;
             }
-        }
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        controller = GetComponent<CharacterController>();
-        anim = player.GetComponentInChildren<Animator>(); // for the character animations
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        if (!collectedWingR)
+            if (playerLight.intensity < 0.08f)
+            {
+                playerLight.intensity += 0.08f * Time.deltaTime;
+                Invoke("playerLightFade", 0.8f);
+            }
+            wingRLight.intensity = 0;
+        } else
         {
-            wingRLight.GetComponent<Light>().intensity = Mathf.PingPong(Time.time * 0.1f, 0.13f); // fade in/out light until collected
+            wingRLight.intensity = Mathf.PingPong(Time.time * 0.1f, 0.13f); // fade in/out light until collected
         }
+
     }
 }

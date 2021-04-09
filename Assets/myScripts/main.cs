@@ -355,25 +355,25 @@ public class main : MonoBehaviour
         //    collectableWingR.SetActive(false); // hide part once found
         //    collectedWingR = true;
         //}
-        if (collectedWingR)
-        {
+        //if (collectedWingR)
+        //{
 
-            // light up that specific part in inventory (fade in)
-            if (wingRLightTop.intensity < 1)
-            {
-                wingRLightTop.intensity += 0.8f * Time.deltaTime;
-            }
-            if (wingRLightBottom.intensity < 1)
-            {
-                wingRLightBottom.intensity += 0.8f * Time.deltaTime;
-            }
-        }
-        else
-        {
-            // until collected, keep light off
-            wingRLightTop.intensity = 0;
-            wingRLightBottom.intensity = 0;
-        }
+        //    // light up that specific part in inventory (fade in)
+        //    if (wingRLightTop.intensity < 1)
+        //    {
+        //        wingRLightTop.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //    if (wingRLightBottom.intensity < 1)
+        //    {
+        //        wingRLightBottom.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //}
+        //else
+        //{
+        //    // until collected, keep light off
+        //    wingRLightTop.intensity = 0;
+        //    wingRLightBottom.intensity = 0;
+        //}
         //
         // LEFT BOOSTER
         float distBoosterL = Vector3.Distance(player.transform.position, collectableBoosterL.transform.position);
