@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class fadingLights : MonoBehaviour
 {
+
     // accessing bool from cameraRotator script
-    public cameraRotator bS;
+    public main bS;
     public bool collectedBody;
     public bool collectedWingL;
     public bool collectedWingR;
@@ -50,13 +51,13 @@ public class fadingLights : MonoBehaviour
         }
 
         // RIGHT WING LIGHT
-        if (bS.collectedWingR == true) // once collected, set the light intensity to 0
-        {
-            wingRLight.GetComponent<Light>().intensity = 0;
-        } else
-        {
-            wingRLight.GetComponent<Light>().intensity = Mathf.PingPong(Time.time * 0.1f, 0.13f); // fade in/out light until collected
-        }
+        //if (bS.collectedWingR == true) // once collected, set the light intensity to 0
+        //{
+        //    wingRLight.GetComponent<Light>().intensity = 0;
+        //} else
+        //{
+        //    wingRLight.GetComponent<Light>().intensity = Mathf.PingPong(Time.time * 0.1f, 0.13f); // fade in/out light until collected
+        //}
 
         // LEFT BOOSTER LIGHT
         if (bS.collectedBoosterL == true) // once collected, set the light intensity to 0

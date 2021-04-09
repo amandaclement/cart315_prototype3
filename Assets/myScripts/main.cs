@@ -4,13 +4,12 @@ using System.Collections;
 
 // MAIN SCRIPT
 
-// reference for camera rotation effect: https://www.youtube.com/watch?v=iuygipAigew
-
-public class cameraRotator : MonoBehaviour
+public class main : MonoBehaviour
 {
     private Animator anim;
 
     // FOR INTRO CAMERA PANNING
+    public GameObject camRotator;
     public float transitionSpeed;
     public float translationSpeed;
     float translationFull = 750;
@@ -121,6 +120,14 @@ public class cameraRotator : MonoBehaviour
     bool flip = false;
     public Light playerLight;
 
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.collider.gameObject == collectableWingR)
+    //    {
+    //        Debug.Log("wingR collision detected");
+    //    }
+    //}
+
     void cameraEffect()
     {
         float translation = translationSpeed * Time.deltaTime;
@@ -134,21 +141,23 @@ public class cameraRotator : MonoBehaviour
         {
             translation = translationFull;
             translationFull = 0;
-            transform.position = Vector3.Lerp(transform.position, new Vector3(x, y, z), Time.deltaTime * transitionSpeed);
+            camRotator.transform.position = Vector3.Lerp(camRotator.transform.position, new Vector3(x, y, z), Time.deltaTime * transitionSpeed);
 
             Invoke("fadeInText", 1f);
         }
-        transform.Translate(0, 0, -translation);
+        camRotator.transform.Translate(0, 0, -translation);
     }
 
     // HANDLING FADING IN/OUT CONTROL INSTRUCTIONS
     void fadeInText()
     {
+
         enableCameraControls = true; // enable camera controls
         alphaAmt1 += 0.2f * Time.deltaTime; // fade in instructions
 
-        if (Input.GetKey(KeyCode.E)) {
-            
+        if (Input.GetKey(KeyCode.E))
+        {
+
             instructions.enabled = false; // hide instructions
             fadeInControls = true;
         }
@@ -217,7 +226,7 @@ public class cameraRotator : MonoBehaviour
             // position player in spaceship
             spaceshipReady.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z);
             player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z);
-            Invoke("prepForFlight",1.5f);
+            Invoke("prepForFlight", 1.5f);
         }
     }
 
@@ -236,6 +245,27 @@ public class cameraRotator : MonoBehaviour
         tempColor3.a = alphaAmt3;
         whiteout.color = tempColor3;
     }
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.collider.gameObject == collectableWingR)
+    //    {
+    //        Debug.Log("wingR collision detected");
+    //        collectableWingR.SetActive(false); // hide part once found
+    //        collectedWingR = true;
+    //        anim.SetTrigger("Flip"); // make player flip once
+
+    //        // light up that specific part in inventory (fade in)
+    //        if (wingRLightTop.intensity < 1)
+    //        {
+    //            wingRLightTop.intensity += 0.8f * Time.deltaTime;
+    //        }
+    //        if (wingRLightBottom.intensity < 1)
+    //        {
+    //            wingRLightBottom.intensity += 0.8f * Time.deltaTime;
+    //        }
+    //    }
+    //}
 
     // HANDLING COLLECTABLES INVENTORY
     void inventory()
@@ -272,7 +302,7 @@ public class cameraRotator : MonoBehaviour
         {
             collectableBody.SetActive(false); // hide part once found
             collectedBody = true;
-        } 
+        }
         if (collectedBody)
         {
             // light up that specific part in inventory (fade in)
@@ -284,7 +314,8 @@ public class cameraRotator : MonoBehaviour
             {
                 bodyLightBottom.intensity += 0.8f * Time.deltaTime;
             }
-        } else
+        }
+        else
         {
             // until collected, keep light off
             bodyLightTop.intensity = 0;
@@ -318,12 +349,12 @@ public class cameraRotator : MonoBehaviour
         }
         //
         // RIGHT WING
-        float distWingR = Vector3.Distance(player.transform.position, collectableWingR.transform.position);
-        if (distWingR < minDistance)
-        {
-            collectableWingR.SetActive(false); // hide part once found
-            collectedWingR = true;
-        }
+        //float distWingR = Vector3.Distance(player.transform.position, collectableWingR.transform.position);
+        //if (distWingR < minDistance)
+        //{
+        //    collectableWingR.SetActive(false); // hide part once found
+        //    collectedWingR = true;
+        //}
         if (collectedWingR)
         {
 
@@ -426,7 +457,7 @@ public class cameraRotator : MonoBehaviour
         // CHECKING IF SPACESHIP IS READY (if all parts are collected)
         if (collectedBody && collectedWingL && collectedWingR && collectedBoosterL && collectedBoosterR && collectedEngine)
         {
-            Invoke("fadeBlack",0); // fade screen to black before transitioning scenes
+            Invoke("fadeBlack", 0); // fade screen to black before transitioning scenes
         }
     }
 
@@ -458,7 +489,7 @@ public class cameraRotator : MonoBehaviour
         mainCam.enabled = true;
         secondaryCam.enabled = false; // secondary cam is disabled until all spaceship parts are collected
 
-       playerLight.GetComponent<Light>().intensity = 0;
+        playerLight.GetComponent<Light>().intensity = 0;
     }
 
     // Update is called once per frame
@@ -484,7 +515,8 @@ public class cameraRotator : MonoBehaviour
 
             // tracking distance between spaceship and moon to control when to start fading to white
             float dist = Vector3.Distance(spaceshipReady.transform.position, moon.transform.position);
-            if (dist < 200) { 
+            if (dist < 200)
+            {
                 fadeWhite();
             }
         }
@@ -497,7 +529,7 @@ public class cameraRotator : MonoBehaviour
             {
                 Vector3 dir = new Vector3(0, 0, -20 - distance);
                 Quaternion rotation = Quaternion.Euler(-20 + currentY, currentX, currentZ);
-                
+
                 camTransform.position = lookAt.position + rotation * dir;
                 camTransform.LookAt(lookAt.position);
 
