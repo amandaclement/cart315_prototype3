@@ -19,6 +19,10 @@ Water Effect Fits For Lowpoly Style by Pure evil studio: https://assetstore.unit
 Urban Night Sky by Kendall Weaver: https://assetstore.unity.com/packages/2d/textures-materials/sky/urban-night-sky-134468
 
 
-* MUSIC *
+* AUDIO *
 
 Music by Kai Engel: https://freemusicarchive.org/music/Kai_Engel
+
+Sound Effects from Zasplat.com:
+https://www.zapsplat.com/music/cartoon-sci-fi-laser-beam-ray-high-pitched/
+https://www.zapsplat.com/?s=crash+explosion&post_type=music&sound-effect-category-id=

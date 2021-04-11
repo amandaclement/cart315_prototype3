@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - orb
+  - Component
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - SSengine
   - 
   - 
-  - 
+  - wingRCylinder
   - 
   - 
   - 

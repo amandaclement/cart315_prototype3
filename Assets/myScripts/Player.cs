@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
+// PLAYER SCRIPT
+
 public class Player : MonoBehaviour {
 	// accessing bool from cameraRotator script
 	public Main bS;
@@ -29,19 +31,18 @@ public class Player : MonoBehaviour {
 	public float currentY = 0.0f;
 	public float currentZ = 0.0f;
 
-	private const float Y_ANGLE_MIN = 25.0f;
-	private const float Y_ANGLE_MAX = 50.0f;
-
 	public float turnSmoothTime = 0.1f;
 	float turnSmoothVelocity;
 
 	public Transform mainCam;
 
+	// START
 	void Start () {
 	    controller = GetComponent <CharacterController>();
 	    anim = gameObject.GetComponentInChildren<Animator>(); // for the character animations
 	}
 
+	// FIXED UPDATE
 	private void FixedUpdate()
 	{
 		if (bS.enteredShip == true)

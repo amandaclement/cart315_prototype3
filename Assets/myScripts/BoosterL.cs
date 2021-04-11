@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// LEFT BOOSTER SCRIPT
+
 public class BoosterL : MonoBehaviour
 {
     public GameObject player;
@@ -27,6 +29,8 @@ public class BoosterL : MonoBehaviour
             anim.SetTrigger("Flip"); // make player flip once
             Invoke("sound", 0.15f); // slightly delay the sound effect
 
+            this.tag = "Untagged"; // remove component tag so that it isn't taken into account when player needs hint
+
             // once collided, destroy the component's rigidbody to disable collider activity
             Destroy(GetComponent<Rigidbody>());
             // hide object by disabling render
@@ -40,7 +44,7 @@ public class BoosterL : MonoBehaviour
         SFX.Play(); // sound effect
     }
 
-    // Start is called before the first frame update
+    // START
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -56,7 +60,7 @@ public class BoosterL : MonoBehaviour
         playerLight.intensity -= 0.2f * Time.deltaTime;
     }
 
-    // Update is called once per frame
+    // UPDATE
     private void FixedUpdate()
     {
         if (collectedComponent)
@@ -70,16 +74,16 @@ public class BoosterL : MonoBehaviour
                 boosterLLightBottom.intensity += 0.8f * Time.deltaTime;
             }
 
-            if (playerLight.intensity < 0.08f)
+            if (playerLight.intensity < 0.1f)
             {
-                playerLight.intensity += 0.08f * Time.deltaTime;
+                playerLight.intensity += 0.1f * Time.deltaTime;
                 Invoke("playerLightFade", 0.8f);
             }
             boosterLLight.intensity = 0;
         }
         else
         {
-            boosterLLight.intensity = Mathf.PingPong(Time.time * 0.1f, 0.13f); // fade in/out light until collected
+            boosterLLight.intensity = Mathf.PingPong(Time.time * 0.1f, 0.2f); // fade in/out light until collected
         }
 
     }

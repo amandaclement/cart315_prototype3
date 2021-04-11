@@ -14,7 +14,17 @@ public class Main : MonoBehaviour
     public BoosterL boosterLScript;
     public BoosterR boosterRScript;
 
+    // FOR PLAYER ANIMATIONS
     private Animator anim;
+
+    // FOR INTRO 
+    public AudioSource music;
+    public Image introScreen;
+    public Text introText;
+    bool fadeInIntroText = false;
+    bool introDone = false;
+    float alphaAmt0 = 0f;
+    float alphaAmt00 = 1f;
 
     // FOR INTRO CAMERA PANNING
     public GameObject camRotator;
@@ -26,8 +36,6 @@ public class Main : MonoBehaviour
     public float y;
     public float z;
     bool enableCameraControls = false;
-
-    public GameObject spaceshipIntro;
 
     // FOR SPACESHIP CAMERA PANNING
     // secondary cam target coordinates
@@ -93,7 +101,7 @@ public class Main : MonoBehaviour
     public Light engineLightTop;
     public Light engineLightBottom;
 
-    // FOR COLLECTABLES // public bools since they are accessed in fadingLights scripts
+    // FOR COLLECTABLES // public bools since they are accessed in other scripts
     public GameObject collectableBody;
     public bool collectedBody = false;
     public GameObject collectableWingR;
@@ -106,9 +114,8 @@ public class Main : MonoBehaviour
     public bool collectedBoosterL = false;
     public GameObject collectableEngine;
     public bool collectedEngine = false;
-    // min necessary range between player and spaceship part in order for them to collect it
-    private float minDistance = 6;
 
+    // FOR FLIGHT TO MOON
     public GameObject spaceshipReady;
     public float offsetX = 0.0f;
     public float offsetY = 0.0f;
@@ -116,26 +123,27 @@ public class Main : MonoBehaviour
     public GameObject moon;
 
     bool fadeInBlackout = true;
-
     public bool enteredShip = false;
-
     bool toMoon = false;
 
     public float floatSpeed = 0.0f;
     public Image whiteout; // end screen
     private float alphaAmt3 = 0f; // end screen alpha
 
-    bool flip = false;
+    // PLAYER LIGHT
     public Light playerLight;
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.collider.gameObject == collectableWingR)
-    //    {
-    //        Debug.Log("wingR collision detected");
-    //    }
-    //}
+    void fadeInIntro()
+    {
+        fadeInIntroText = true;
+    }
+    void fadeOutIntro()
+    {
+        introDone = true;
+        fadeInIntroText = false;
+    }
 
+    // CAMERA EFFECT (INITIAL PAN)
     void cameraEffect()
     {
         float translation = translationSpeed * Time.deltaTime;
@@ -159,13 +167,11 @@ public class Main : MonoBehaviour
     // HANDLING FADING IN/OUT CONTROL INSTRUCTIONS
     void fadeInText()
     {
-
         enableCameraControls = true; // enable camera controls
         alphaAmt1 += 0.2f * Time.deltaTime; // fade in instructions
 
         if (Input.GetKey(KeyCode.E))
         {
-
             instructions.enabled = false; // hide instructions
             fadeInControls = true;
         }
@@ -239,11 +245,6 @@ public class Main : MonoBehaviour
         }
     }
 
-    void prepForFlight()
-    {
-        toMoon = true;
-    }
-
     void fadeWhite()
     {
         if (alphaAmt3 < 1f)
@@ -255,7 +256,12 @@ public class Main : MonoBehaviour
         whiteout.color = tempColor3;
     }
 
-    // HANDLING COLLECTABLES INVENTORY
+    void prepForFlight()
+    {
+        toMoon = true;
+    }
+
+    // HANDLING INVENTORY
     void inventory()
     {
         // positioning inventory based on viewport
@@ -283,165 +289,6 @@ public class Main : MonoBehaviour
         engineLightTop.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - 90, Screen.height + 30, Camera.main.nearClipPlane + 1));
         engineLightBottom.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - 90, Screen.height - 90, Camera.main.nearClipPlane + 1));
 
-        // HANDLING THE FINDING OF COLLECTABLES
-        // BODY
-        //float distBody = Vector3.Distance(player.transform.position, collectableBody.transform.position);
-        //if (distBody < minDistance)
-        //{
-        //    collectableBody.SetActive(false); // hide part once found
-        //    collectedBody = true;
-        //}
-        //if (collectedBody)
-        //{
-        //    // light up that specific part in inventory (fade in)
-        //    if (bodyLightTop.intensity < 1)
-        //    {
-        //        bodyLightTop.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //    if (bodyLightBottom.intensity < 1)
-        //    {
-        //        bodyLightBottom.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //}
-        //else
-        //{
-        //    // until collected, keep light off
-        //    bodyLightTop.intensity = 0;
-        //    bodyLightBottom.intensity = 0;
-        //}
-        ////
-        //// LEFT WING
-        //float distWingL = Vector3.Distance(player.transform.position, collectableWingL.transform.position);
-        //if (distWingL < minDistance)
-        //{
-        //    collectableWingL.SetActive(false); // hide part once found
-        //    collectedWingL = true;
-        //}
-        //if (collectedWingL)
-        //{
-        //    // light up that specific part in inventory (fade in)
-        //    if (wingLLightTop.intensity < 1)
-        //    {
-        //        wingLLightTop.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //    if (wingLLightBottom.intensity < 1)
-        //    {
-        //        wingLLightBottom.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //}
-        //else
-        //{
-        //    // until collected, keep light off
-        //    wingLLightTop.intensity = 0;
-        //    wingLLightBottom.intensity = 0;
-        //}
-        //
-        // RIGHT WING
-        //float distWingR = Vector3.Distance(player.transform.position, collectableWingR.transform.position);
-        //if (distWingR < minDistance)
-        //{
-        //    collectableWingR.SetActive(false); // hide part once found
-        //    collectedWingR = true;
-        //}
-        //if (collectedWingR)
-        //{
-
-        //    // light up that specific part in inventory (fade in)
-        //    if (wingRLightTop.intensity < 1)
-        //    {
-        //        wingRLightTop.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //    if (wingRLightBottom.intensity < 1)
-        //    {
-        //        wingRLightBottom.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //}
-        //else
-        //{
-        //    // until collected, keep light off
-        //    wingRLightTop.intensity = 0;
-        //    wingRLightBottom.intensity = 0;
-        //}
-        //
-        // LEFT BOOSTER
-        //float distBoosterL = Vector3.Distance(player.transform.position, collectableBoosterL.transform.position);
-        //if (distBoosterL < minDistance)
-        //{
-        //    collectableBoosterL.SetActive(false); // hide part once found
-        //    collectedBoosterL = true;
-        //}
-        //if (collectedBoosterL)
-        //{
-        //    // light up that specific part in inventory (fade in)
-        //    if (boosterLLightTop.intensity < 1)
-        //    {
-        //        boosterLLightTop.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //    if (boosterLLightBottom.intensity < 1)
-        //    {
-        //        boosterLLightBottom.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //}
-        //else
-        //{
-        //    // until collected, keep light off
-        //    boosterLLightTop.intensity = 0;
-        //    boosterLLightBottom.intensity = 0;
-        //}
-        //
-        // RIGHT BOOSTER
-        //float distBoosterR = Vector3.Distance(player.transform.position, collectableBoosterR.transform.position);
-        //if (distBoosterR < minDistance)
-        //{
-        //    collectableBoosterR.SetActive(false); // hide part once found
-        //    collectedBoosterR = true;
-        //}
-        //if (collectedBoosterR)
-        //{
-        //    // light up that specific part in inventory (fade in)
-        //    if (boosterRLightTop.intensity < 1)
-        //    {
-        //        boosterRLightTop.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //    if (boosterRLightBottom.intensity < 1)
-        //    {
-        //        boosterRLightBottom.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //}
-        //else
-        //{
-        //    // until collected, keep light off
-        //    boosterRLightTop.intensity = 0;
-        //    boosterRLightBottom.intensity = 0;
-        //}
-        //
-        // ENGINE
-        //float distEngine = Vector3.Distance(player.transform.position, collectableEngine.transform.position);
-        //if (distEngine < minDistance)
-        //{
-        //    collectableEngine.SetActive(false); // hide part once found
-        //    collectedEngine = true;
-        //}
-        //if (collectedEngine)
-        //{
-        //    // light up that specific part in inventory (fade in)
-        //    if (engineLightTop.intensity < 1)
-        //    {
-        //        engineLightTop.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //    if (engineLightBottom.intensity < 1)
-        //    {
-        //        engineLightBottom.intensity += 0.8f * Time.deltaTime;
-        //    }
-        //}
-        //else
-        //{
-        //    // until collected, keep light off
-        //    engineLightTop.intensity = 0;
-        //    engineLightBottom.intensity = 0;
-        //}
-        //
-
         // CHECKING IF SPACESHIP IS READY (if all parts are collected)
         if (bodyScript.collectedComponent && engineScript.collectedComponent && wingRScript.collectedComponent && wingLScript.collectedComponent && boosterRScript.collectedComponent && boosterLScript.collectedComponent)
         {
@@ -449,15 +296,31 @@ public class Main : MonoBehaviour
         }
     }
 
+    IEnumerator playSound()
+    {
+        yield return new WaitForSeconds(6);
+        music.Play();
+    }
 
-    // Start is called before the first frame update
+    // START
     void Start()
     {
+        StartCoroutine(playSound());
+
         anim = gameObject.GetComponentInChildren<Animator>(); // for the character animations
 
+        // for fading
         var tempColor = controls.color;
         tempColor.a = alphaAmt;
         controls.color = tempColor;
+
+        var tempColor0 = introText.color;
+        tempColor0.a = alphaAmt0;
+        introText.color = tempColor0;
+
+        var tempColor00 = introScreen.color;
+        tempColor00.a = alphaAmt00;
+        introScreen.color = tempColor00;
 
         var tempColor1 = instructions.color;
         tempColor1.a = alphaAmt1;
@@ -480,15 +343,42 @@ public class Main : MonoBehaviour
         playerLight.GetComponent<Light>().intensity = 0;
     }
 
-    // Update is called once per frame
+    // UPDATE
     void Update()
     {
-        cameraEffect();
+        Invoke("fadeInIntro", 2.7f);
+        Invoke("fadeOutIntro", 5f);
 
-        currentX += Input.GetAxis("Mouse X");
-        currentY -= Input.GetAxis("Mouse Y");
+        if (fadeInIntroText)
+        {
+            alphaAmt0 += 0.8f * Time.deltaTime; // fade in introText
 
-        currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+            var tempColor0 = introText.color;
+            tempColor0.a = alphaAmt0;
+            introText.color = tempColor0;   
+        }
+
+        if (introDone)
+        {
+            alphaAmt0 -= 8f * Time.deltaTime; // fade out introText
+
+            var tempColor0 = introText.color;
+            tempColor0.a = alphaAmt0;
+            introText.color = tempColor0;
+
+            alphaAmt00 -= 1f * Time.deltaTime; // fade out introText
+
+            var tempColor00 = introScreen.color;
+            tempColor00.a = alphaAmt00;
+            introScreen.color = tempColor00;
+
+            Invoke("cameraEffect", 1f);
+
+            currentX += Input.GetAxis("Mouse X");
+            currentY -= Input.GetAxis("Mouse Y");
+
+            currentY = Mathf.Clamp(currentY, Y_ANGLE_MIN, Y_ANGLE_MAX);
+        }
 
         if (toMoon)
         {
@@ -510,6 +400,7 @@ public class Main : MonoBehaviour
         }
     }
 
+    // LATE UPDATE
     private void LateUpdate()
     {
         if (enableCameraControls)
