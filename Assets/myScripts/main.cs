@@ -4,8 +4,16 @@ using System.Collections;
 
 // MAIN SCRIPT
 
-public class main : MonoBehaviour
+public class Main : MonoBehaviour
 {
+    // TO ACCESS BOOLEANS FROM COMPONENT SCRIPTS
+    public Body bodyScript;
+    public Engine engineScript;
+    public WingL wingLScript;
+    public WingR wingRScript;
+    public BoosterL boosterLScript;
+    public BoosterR boosterRScript;
+
     private Animator anim;
 
     // FOR INTRO CAMERA PANNING
@@ -226,6 +234,7 @@ public class main : MonoBehaviour
             // position player in spaceship
             spaceshipReady.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z);
             player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z);
+            player.transform.rotation = Quaternion.Euler(0, 0, 0);
             Invoke("prepForFlight", 1.5f);
         }
     }
@@ -245,27 +254,6 @@ public class main : MonoBehaviour
         tempColor3.a = alphaAmt3;
         whiteout.color = tempColor3;
     }
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.collider.gameObject == collectableWingR)
-    //    {
-    //        Debug.Log("wingR collision detected");
-    //        collectableWingR.SetActive(false); // hide part once found
-    //        collectedWingR = true;
-    //        anim.SetTrigger("Flip"); // make player flip once
-
-    //        // light up that specific part in inventory (fade in)
-    //        if (wingRLightTop.intensity < 1)
-    //        {
-    //            wingRLightTop.intensity += 0.8f * Time.deltaTime;
-    //        }
-    //        if (wingRLightBottom.intensity < 1)
-    //        {
-    //            wingRLightBottom.intensity += 0.8f * Time.deltaTime;
-    //        }
-    //    }
-    //}
 
     // HANDLING COLLECTABLES INVENTORY
     void inventory()
@@ -297,56 +285,56 @@ public class main : MonoBehaviour
 
         // HANDLING THE FINDING OF COLLECTABLES
         // BODY
-        float distBody = Vector3.Distance(player.transform.position, collectableBody.transform.position);
-        if (distBody < minDistance)
-        {
-            collectableBody.SetActive(false); // hide part once found
-            collectedBody = true;
-        }
-        if (collectedBody)
-        {
-            // light up that specific part in inventory (fade in)
-            if (bodyLightTop.intensity < 1)
-            {
-                bodyLightTop.intensity += 0.8f * Time.deltaTime;
-            }
-            if (bodyLightBottom.intensity < 1)
-            {
-                bodyLightBottom.intensity += 0.8f * Time.deltaTime;
-            }
-        }
-        else
-        {
-            // until collected, keep light off
-            bodyLightTop.intensity = 0;
-            bodyLightBottom.intensity = 0;
-        }
-        //
-        // LEFT WING
-        float distWingL = Vector3.Distance(player.transform.position, collectableWingL.transform.position);
-        if (distWingL < minDistance)
-        {
-            collectableWingL.SetActive(false); // hide part once found
-            collectedWingL = true;
-        }
-        if (collectedWingL)
-        {
-            // light up that specific part in inventory (fade in)
-            if (wingLLightTop.intensity < 1)
-            {
-                wingLLightTop.intensity += 0.8f * Time.deltaTime;
-            }
-            if (wingLLightBottom.intensity < 1)
-            {
-                wingLLightBottom.intensity += 0.8f * Time.deltaTime;
-            }
-        }
-        else
-        {
-            // until collected, keep light off
-            wingLLightTop.intensity = 0;
-            wingLLightBottom.intensity = 0;
-        }
+        //float distBody = Vector3.Distance(player.transform.position, collectableBody.transform.position);
+        //if (distBody < minDistance)
+        //{
+        //    collectableBody.SetActive(false); // hide part once found
+        //    collectedBody = true;
+        //}
+        //if (collectedBody)
+        //{
+        //    // light up that specific part in inventory (fade in)
+        //    if (bodyLightTop.intensity < 1)
+        //    {
+        //        bodyLightTop.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //    if (bodyLightBottom.intensity < 1)
+        //    {
+        //        bodyLightBottom.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //}
+        //else
+        //{
+        //    // until collected, keep light off
+        //    bodyLightTop.intensity = 0;
+        //    bodyLightBottom.intensity = 0;
+        //}
+        ////
+        //// LEFT WING
+        //float distWingL = Vector3.Distance(player.transform.position, collectableWingL.transform.position);
+        //if (distWingL < minDistance)
+        //{
+        //    collectableWingL.SetActive(false); // hide part once found
+        //    collectedWingL = true;
+        //}
+        //if (collectedWingL)
+        //{
+        //    // light up that specific part in inventory (fade in)
+        //    if (wingLLightTop.intensity < 1)
+        //    {
+        //        wingLLightTop.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //    if (wingLLightBottom.intensity < 1)
+        //    {
+        //        wingLLightBottom.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //}
+        //else
+        //{
+        //    // until collected, keep light off
+        //    wingLLightTop.intensity = 0;
+        //    wingLLightBottom.intensity = 0;
+        //}
         //
         // RIGHT WING
         //float distWingR = Vector3.Distance(player.transform.position, collectableWingR.transform.position);
@@ -376,88 +364,88 @@ public class main : MonoBehaviour
         //}
         //
         // LEFT BOOSTER
-        float distBoosterL = Vector3.Distance(player.transform.position, collectableBoosterL.transform.position);
-        if (distBoosterL < minDistance)
-        {
-            collectableBoosterL.SetActive(false); // hide part once found
-            collectedBoosterL = true;
-        }
-        if (collectedBoosterL)
-        {
-            // light up that specific part in inventory (fade in)
-            if (boosterLLightTop.intensity < 1)
-            {
-                boosterLLightTop.intensity += 0.8f * Time.deltaTime;
-            }
-            if (boosterLLightBottom.intensity < 1)
-            {
-                boosterLLightBottom.intensity += 0.8f * Time.deltaTime;
-            }
-        }
-        else
-        {
-            // until collected, keep light off
-            boosterLLightTop.intensity = 0;
-            boosterLLightBottom.intensity = 0;
-        }
+        //float distBoosterL = Vector3.Distance(player.transform.position, collectableBoosterL.transform.position);
+        //if (distBoosterL < minDistance)
+        //{
+        //    collectableBoosterL.SetActive(false); // hide part once found
+        //    collectedBoosterL = true;
+        //}
+        //if (collectedBoosterL)
+        //{
+        //    // light up that specific part in inventory (fade in)
+        //    if (boosterLLightTop.intensity < 1)
+        //    {
+        //        boosterLLightTop.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //    if (boosterLLightBottom.intensity < 1)
+        //    {
+        //        boosterLLightBottom.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //}
+        //else
+        //{
+        //    // until collected, keep light off
+        //    boosterLLightTop.intensity = 0;
+        //    boosterLLightBottom.intensity = 0;
+        //}
         //
         // RIGHT BOOSTER
-        float distBoosterR = Vector3.Distance(player.transform.position, collectableBoosterR.transform.position);
-        if (distBoosterR < minDistance)
-        {
-            collectableBoosterR.SetActive(false); // hide part once found
-            collectedBoosterR = true;
-        }
-        if (collectedBoosterR)
-        {
-            // light up that specific part in inventory (fade in)
-            if (boosterRLightTop.intensity < 1)
-            {
-                boosterRLightTop.intensity += 0.8f * Time.deltaTime;
-            }
-            if (boosterRLightBottom.intensity < 1)
-            {
-                boosterRLightBottom.intensity += 0.8f * Time.deltaTime;
-            }
-        }
-        else
-        {
-            // until collected, keep light off
-            boosterRLightTop.intensity = 0;
-            boosterRLightBottom.intensity = 0;
-        }
+        //float distBoosterR = Vector3.Distance(player.transform.position, collectableBoosterR.transform.position);
+        //if (distBoosterR < minDistance)
+        //{
+        //    collectableBoosterR.SetActive(false); // hide part once found
+        //    collectedBoosterR = true;
+        //}
+        //if (collectedBoosterR)
+        //{
+        //    // light up that specific part in inventory (fade in)
+        //    if (boosterRLightTop.intensity < 1)
+        //    {
+        //        boosterRLightTop.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //    if (boosterRLightBottom.intensity < 1)
+        //    {
+        //        boosterRLightBottom.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //}
+        //else
+        //{
+        //    // until collected, keep light off
+        //    boosterRLightTop.intensity = 0;
+        //    boosterRLightBottom.intensity = 0;
+        //}
         //
         // ENGINE
-        float distEngine = Vector3.Distance(player.transform.position, collectableEngine.transform.position);
-        if (distEngine < minDistance)
-        {
-            collectableEngine.SetActive(false); // hide part once found
-            collectedEngine = true;
-        }
-        if (collectedEngine)
-        {
-            // light up that specific part in inventory (fade in)
-            if (engineLightTop.intensity < 1)
-            {
-                engineLightTop.intensity += 0.8f * Time.deltaTime;
-            }
-            if (engineLightBottom.intensity < 1)
-            {
-                engineLightBottom.intensity += 0.8f * Time.deltaTime;
-            }
-        }
-        else
-        {
-            // until collected, keep light off
-            engineLightTop.intensity = 0;
-            engineLightBottom.intensity = 0;
-        }
+        //float distEngine = Vector3.Distance(player.transform.position, collectableEngine.transform.position);
+        //if (distEngine < minDistance)
+        //{
+        //    collectableEngine.SetActive(false); // hide part once found
+        //    collectedEngine = true;
+        //}
+        //if (collectedEngine)
+        //{
+        //    // light up that specific part in inventory (fade in)
+        //    if (engineLightTop.intensity < 1)
+        //    {
+        //        engineLightTop.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //    if (engineLightBottom.intensity < 1)
+        //    {
+        //        engineLightBottom.intensity += 0.8f * Time.deltaTime;
+        //    }
+        //}
+        //else
+        //{
+        //    // until collected, keep light off
+        //    engineLightTop.intensity = 0;
+        //    engineLightBottom.intensity = 0;
+        //}
         //
 
         // CHECKING IF SPACESHIP IS READY (if all parts are collected)
-        if (collectedBody && collectedWingL && collectedWingR && collectedBoosterL && collectedBoosterR && collectedEngine)
+        if (bodyScript.collectedComponent && engineScript.collectedComponent && wingRScript.collectedComponent && wingLScript.collectedComponent && boosterRScript.collectedComponent && boosterLScript.collectedComponent)
         {
-            Invoke("fadeBlack", 0); // fade screen to black before transitioning scenes
+            Invoke("fadeBlack", 0.7f); // fade screen to black before transitioning scenes
         }
     }
 
@@ -510,12 +498,12 @@ public class main : MonoBehaviour
             player.transform.position = Vector3.MoveTowards(player.transform.position, moon.transform.position, step);
 
             // slight rotation during flight
-            player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, Quaternion.Euler(0, 0, 20), 2 * Time.deltaTime);
-            spaceshipReady.transform.rotation = Quaternion.RotateTowards(spaceshipReady.transform.rotation, Quaternion.Euler(0, 0, 20), 2 * Time.deltaTime);
+            player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, Quaternion.Euler(0, 0, 30), 2 * Time.deltaTime);
+            spaceshipReady.transform.rotation = Quaternion.RotateTowards(spaceshipReady.transform.rotation, Quaternion.Euler(0, 0, 30), 2 * Time.deltaTime);
 
             // tracking distance between spaceship and moon to control when to start fading to white
             float dist = Vector3.Distance(spaceshipReady.transform.position, moon.transform.position);
-            if (dist < 200)
+            if (dist < 180)
             {
                 fadeWhite();
             }

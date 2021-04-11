@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WingR : MonoBehaviour
+public class Body : MonoBehaviour
 {
     public GameObject player;
     public bool collectedComponent = false;
 
-    public Light wingRLightTop; // inventory light
-    public Light wingRLightBottom; // inventory light
+    public Light bodyLightTop; // inventory light
+    public Light bodyLightBottom; // inventory light
 
-    public Light wingRLight; // component glow effect
+    public Light bodyLight; // component glow effect
     public Light playerLight; // player glow effect
 
     private Animator anim;
@@ -23,7 +23,7 @@ public class WingR : MonoBehaviour
         if (collision.collider.gameObject == player)
         {
             collectedComponent = true;
-            wingRLight.intensity = 0; // once collected, remove light
+            bodyLight.intensity = 0; // once collected, remove light
             anim.SetTrigger("Flip"); // make player flip once
             Invoke("sound", 0.15f); // slightly delay the sound effect
 
@@ -47,8 +47,8 @@ public class WingR : MonoBehaviour
         anim = player.GetComponentInChildren<Animator>(); // for the character animations
 
         playerLight.intensity = 0;
-        wingRLightTop.intensity = 0;
-        wingRLightBottom.intensity = 0;
+        bodyLightTop.intensity = 0;
+        bodyLightBottom.intensity = 0;
     }
 
     void playerLightFade()
@@ -61,13 +61,13 @@ public class WingR : MonoBehaviour
     {
         if (collectedComponent)
         {
-            if (wingRLightTop.intensity < 1)
+            if (bodyLightTop.intensity < 1)
             {
-                wingRLightTop.intensity += 0.8f * Time.deltaTime;
+                bodyLightTop.intensity += 0.8f * Time.deltaTime;
             }
-            if (wingRLightBottom.intensity < 1)
+            if (bodyLightBottom.intensity < 1)
             {
-                wingRLightBottom.intensity += 0.8f * Time.deltaTime;
+                bodyLightBottom.intensity += 0.8f * Time.deltaTime;
             }
 
             if (playerLight.intensity < 0.08f)
@@ -75,10 +75,11 @@ public class WingR : MonoBehaviour
                 playerLight.intensity += 0.08f * Time.deltaTime;
                 Invoke("playerLightFade", 0.8f);
             }
-            wingRLight.intensity = 0;
-        } else
+            bodyLight.intensity = 0;
+        }
+        else
         {
-            wingRLight.intensity = Mathf.PingPong(Time.time * 0.1f, 0.13f); // fade in/out light until collected
+            bodyLight.intensity = Mathf.PingPong(Time.time * 0.1f, 0.13f); // fade in/out light until collected
         }
 
     }
