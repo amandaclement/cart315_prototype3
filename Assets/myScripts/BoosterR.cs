@@ -18,6 +18,8 @@ public class BoosterR : MonoBehaviour
     private Animator anim;
     private CharacterController controller;
 
+    public bool colliding = false;
+
     public AudioSource SFX;
 
     void OnCollisionEnter(Collision collision)
@@ -31,11 +33,21 @@ public class BoosterR : MonoBehaviour
 
             this.tag = "Untagged"; // remove component tag so that it isn't taken into account when player needs hint
 
-            // once collided, destroy the component's rigidbody to disable collider activity
-            Destroy(GetComponent<Rigidbody>());
             // hide object by disabling render
             MeshRenderer render = gameObject.GetComponentInChildren<MeshRenderer>();
             render.enabled = false;
+
+            colliding = true;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.gameObject == player)
+        {
+            colliding = false;
+            // once collided, destroy the component's rigidbody to disable collider activity
+            Destroy(GetComponent<Rigidbody>());
         }
     }
 

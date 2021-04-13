@@ -32,7 +32,7 @@ public class Hint : MonoBehaviour
     public Light engineHintLight;
 
     // TIMER
-    private float timeRemaining = 120;
+    private float timeRemaining = 100;
 
     // reference: https://docs.unity3d.com/ScriptReference/GameObject.FindGameObjectsWithTag.html?_ga=2.125981838.2057613814.1612463807-1308570294.1603245419
     // detecting which non-collected component is closest to player (collected components not accounted for since they are untagged)
@@ -124,8 +124,8 @@ public class Hint : MonoBehaviour
         if (fadeInControls)
         {
             alphaAmt2 += 0.2f * Time.deltaTime; // fade in hint instructions
-
         }
+
         var tempColor2 = hintControls.color;
         tempColor2.a = alphaAmt2;
         hintControls.color = tempColor2;
@@ -203,20 +203,19 @@ public class Hint : MonoBehaviour
         }
 
         // FOR TIMER
-        if (bodyScript.collectedComponent || engineScript.collectedComponent || wingRScript.collectedComponent || wingLScript.collectedComponent || boosterRScript.collectedComponent || boosterLScript.collectedComponent)
+        if (bodyScript.colliding || engineScript.colliding || wingRScript.colliding || wingLScript.colliding || boosterRScript.colliding || boosterLScript.colliding)
         {
-            timeRemaining = 120; // when a component is collected, reset the timer
+            timeRemaining = 100; // when a component is collected, reset the timer (occurs during collision)
         }
-
-        // counting down time
         if (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
         }
         else
         {
-            // if no components are found within 120 seconds, give player option of triggering hint
+            // if no components are found within 100 seconds, give player option of triggering hint
             hintAvailable = true;
         }
+        Debug.Log(timeRemaining);
     }
 }

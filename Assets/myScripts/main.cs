@@ -296,6 +296,7 @@ public class Main : MonoBehaviour
         }
     }
 
+    // TRIGGERING MUSIC
     IEnumerator playSound()
     {
         yield return new WaitForSeconds(6);
