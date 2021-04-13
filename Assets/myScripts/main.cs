@@ -124,7 +124,7 @@ public class Main : MonoBehaviour
 
     bool fadeInBlackout = true;
     public bool enteredShip = false;
-    bool toMoon = false;
+    public bool toMoon = false;
 
     public float floatSpeed = 0.0f;
     public Image whiteout; // end screen

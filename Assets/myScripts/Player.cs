@@ -4,7 +4,8 @@ using System.Collections;
 // PLAYER SCRIPT
 
 public class Player : MonoBehaviour {
-	// accessing bool from cameraRotator script
+
+	// accessing bools from Main script
 	public Main bS;
 	public bool enteredShip;
 	public bool collectedWingR;
@@ -61,6 +62,11 @@ public class Player : MonoBehaviour {
 		}
 		else
 		{
+			anim.SetInteger("AnimationPar", 0);
+		}
+
+		if (bS.toMoon)
+        {
 			anim.SetInteger("AnimationPar", 0);
 		}
 		//
